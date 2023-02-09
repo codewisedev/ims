@@ -1,0 +1,378 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/dragable.css" />
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+
+<% let levelOne = customers.filter(customer => { return customer.level == 1 }) %>
+<% let levelTwo = customers.filter(customer => { return customer.level == 2 }) %>
+<% let levelThree = customers.filter(customer => { return customer.level == 3 }) %>
+<% let levelFour = customers.filter(customer => { return customer.level == 4 }) %>
+<% let levelFive = customers.filter(customer => { return customer.level == 5 }) %>
+<% let levelSix = customers.filter(customer => { return customer.level == 6 }) %>
+
+<% contentFor('body') %>
+<div class="grid-container">
+	<div id="content" class="section">
+		<div class="item">
+			<ul id="sortable1" class="connectedSortable1">
+				<div class="list-header disable-sort-item">
+					<h2>لیست کاربران اولیه</h2>
+					<hr />
+				</div>
+
+				<!--? Search -->
+				<input type="text" id="levelOneSearch" class="search disable-sort-item" onkeyup="myFunction()"
+					placeholder="جستجو...">
+
+				<script>
+					function myFunction() {
+						var input, filter, ul, li, a, i, txtValue;
+						input = document.getElementById("levelOneSearch");
+						filter = input.value.toUpperCase();
+						ul = document.getElementById("sortable1");
+						li = ul.getElementsByTagName("li");
+						for (i = 0; i < li.length; i++) {
+							a = li[i].getElementsByTagName("a")[0];
+							txtValue = a.textContent || a.innerText;
+							if (txtValue.toUpperCase().indexOf(filter) > -1)
+								li[i].style.display = "";
+							else
+								li[i].style.display = "none";
+						}
+					}
+
+				</script>
+				<!--! Search -->
+
+				<% levelOne.forEach(customer => { %>
+				<li id="s1_<%= customer._id %>" class="ui-card-one">
+					<a href="#">
+						<div class="widget">
+							<% if(customer.gender == 1) { %>
+							<span><i class="fa fa-male" aria-hidden="true"></i></span>
+							<% } else { %>
+							<span><i class="fa fa-female" aria-hidden="true"></i></span>
+							<% } %>
+							<h4><%= customer.name %></h4>
+							<p class="mt-1 mb-1 text-sm text-muted">
+								<i class="fa fa-clock"></i>
+								<%= date(customer.createdAt).fromNow() %>
+							</p>
+							<p class="card-blurb">
+								<% if(customer.proposal == 0) { %>
+								نامشخص
+								<% } else if(customer.proposal == 1) { %>
+								بیمه عمر
+								<% } else if(customer.proposal == 2) { %>
+								بیمه شخص ثالث
+								<% } else if(customer.proposal == 3) { %>
+								بیمه بدنه
+								<% } else if(customer.proposal == 4) { %>
+								بیمه آتش سوزی
+								<% } %>
+							</p>
+						</div>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+
+		<!--? Pre Follow Modal -->
+		<div class="modal fade" id="preFollowModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+			style="z-index: 9999;">
+			<div class="modal-dialog modal-dialog-centered" role="form">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">افزودن پیش پیگیری</h5>
+						<button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form action="/agent/customer/ledgerbinder/prefollow?_csrf=<%= req.csrfToken() %>" method="POST"
+						enctype="multipart/form-data">
+						<div class="modal-body">
+
+							<input type="hidden" name="customer" id="preFollowCustomer" />
+
+							<div class="form-group">
+								<label>نحوه پیگیری</label>
+								<select class="form-control formObject" id="htfu" name="htfu">
+									<option value="1">تماس تلفنی</option>
+									<option value="2">پیامک</option>
+									<option value="3">حضوری</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label>تاریخ پیگیری</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</span>
+									</div>
+									<input class="date form-control" dir="ltr" />
+									<input class="date" name="date" id="alt-date" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label>تاریخ پیگیری بعدی</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</span>
+									</div>
+									<input class="nextDate form-control" dir="ltr" />
+									<input class="nextDate" name="nextDate" id="alt-nextDate" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label>فایل صوتی</label>
+								<div class="input-group">
+									<div class="fileUpload upload-btn btn width100">
+										<span id="uploadText">افزودن فایل صوتی</span>
+										<input type="file" class="uploadfile" name="voice" />
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label>توضیحات</label>
+								<textarea name="desc" class="form-control formObject"></textarea>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">ثبت</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel">
+								بستن
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--! Pre Follow Modal -->
+
+		<div class="item">
+			<ul id="sortable2" class="connectedSortable1 connectedSortable2">
+				<div class="list-header disable-sort-item">
+					<h2>پیش پیگیری</h2>
+					<hr />
+				</div>
+				<% levelTwo.forEach(customer => { %>
+				<li id="s1_1" class="ui-card-two">
+					<a href="/">
+						<h4><%= customer.name %></h4>
+						<p class="mt-1 mb-1 text-sm text-muted">
+							<i class="fa fa-clock"></i>
+						</p>
+						<p class="card-blurb"></p>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+
+		<!--? Two Modal -->
+		<div class="modal fade" id="twoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="form">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">افزودن قرار حظوری اولیه</h5>
+						<button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="/admin/location/city" method="POST">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+							<label>تاریخ ملاقات</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<i class="fa fa-calendar"></i>
+									</span>
+								</div>
+								<input id="date" class="form-control" />
+							</div>
+
+							<label for="startTime">ساعت ملاقات</label>
+							<div>
+								<input type="time" id="startTime">
+							</div>
+
+							<label>فایل صوتی</label>
+							<div class="input-group">
+								<div class="fileUpload upload-btn btn width100">
+									<span id="uploadText">افزودن فایل صوتی</span>
+									<input type="file" class="uploadfile" name="file" />
+								</div>
+							</div>
+
+							<label>توضیحات</label>
+							<textarea name="intrest" class="form-control formObject"
+								value="<%= complete('intrest') %>"></textarea>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary">ثبت</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel">
+							بستن
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--! Two Modal -->
+
+		<div class="item">
+			<ul id="sortable3" class="connectedSortable2 connectedSortable3">
+				<div class="list-header disable-sort-item">
+					<h2>قرار حضوری اولیه</h2>
+					<hr />
+				</div>
+				<% levelThree.forEach(customer => { %>
+				<li id="s1_1" class="ui-card-three">
+					<a href="/">
+						<h4><%= customer.name %></h4>
+						<p class="mt-1 mb-1 text-sm text-muted">
+							<i class="fa fa-clock"></i>
+							<%= date(Date.now()).fromNow() %>
+						</p>
+						<p class="card-blurb">
+							بیمه عمر
+						</p>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+		<div class="item">
+			<ul id="sortable4" class="connectedSortable3 connectedSortable4">
+				<div class="list-header disable-sort-item">
+					<h2>پیگیری</h2>
+					<hr />
+				</div>
+				<% levelFour.forEach(customer => { %>
+				<li id="s1_1" class="ui-card-four">
+					<a href="/">
+						<h4><%= customer.name %></h4>
+						<p class="mt-1 mb-1 text-sm text-muted">
+							<i class="fa fa-clock"></i>
+							<%= date(Date.now()).fromNow() %>
+						</p>
+						<p class="card-blurb">
+							بیمه عمر
+						</p>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+		<div class="item">
+			<ul id="sortable5" class="connectedSortable4 connectedSortable5">
+				<div class="list-header disable-sort-item">
+					<h2>وصول بیمه نامه</h2>
+					<hr />
+				</div>
+				<% levelFive.forEach(customer => { %>
+				<li id="s1_1" class="ui-card-five">
+					<a href="/">
+						<h4><%= customer.name %></h4>
+						<p class="mt-1 mb-1 text-sm text-muted">
+							<i class="fa fa-clock"></i>
+							<%= date(Date.now()).fromNow() %>
+						</p>
+						<p class="card-blurb">
+							بیمه عمر
+						</p>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+		<div class="item">
+			<ul id="sortable6" class="connectedSortable5 connectedSortable6">
+				<div class="list-header disable-sort-item">
+					<h2>تمدید بیمه نامه</h2>
+					<hr />
+				</div>
+				<% levelSix.forEach(customer => { %>
+				<li id="s1_1" class="ui-card-six">
+					<a href="/">
+						<h4><%= customer.name %></h4>
+						<p class="mt-1 mb-1 text-sm text-muted">
+							<i class="fa fa-clock"></i>
+							<%= date(Date.now()).fromNow() %>
+						</p>
+						<p class="card-blurb">
+							بیمه عمر
+						</p>
+					</a>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<% contentFor('script') %>
+<script type="text/javascript" src="/js/dragable.js"></script>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+
+<script>
+	$(document).ready(function ($) {
+
+		$('.date').pDatepicker({
+			observer: true,
+			initialValue: true,
+			format: 'YYYY/MM/DD',
+			altField: '#alt-date',
+			autoClose: true,
+			maxDate: new persianDate().add('year', 0).valueOf(),
+			minDate: new persianDate().subtract('year', 1).valueOf(),
+		});
+
+		$('.nextDate').pDatepicker({
+			observer: true,
+			initialValue: false,
+			format: 'YYYY/MM/DD',
+			altField: '#alt-nextDate',
+			autoClose: true,
+			maxDate: new persianDate().add('year', 1).valueOf(),
+			minDate: new persianDate().subtract('year', 0).valueOf(),
+		});
+
+		$('.uploadfile').change(function () {
+			var filename = readURL(this);
+			$(this).parent().children('span').html(filename);
+		});
+
+		function readURL(input) {
+			var url = input.value;
+			var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+			if (input.files && input.files[0] && (ext == 'mp3' || ext == 'mp4' || ext == 'm4a')) {
+				var path = $(input).val();
+				var filename = path.replace(/^.*\\/, '');
+				$('#uploadText').css('color', 'var(--primary)');
+				return filename;
+			} else {
+				$(input).val('');
+				$('#uploadText').css('color', 'var(--red)');
+				return 'فقط فرمت های mp4 و m4a و mp3 پشتیبانی می شود';
+			}
+		}
+	});
+
+</script>

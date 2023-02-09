@@ -1,0 +1,281 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/profilepicker.css" />
+<link rel="stylesheet" href="/css/radio.css" />
+
+<style>
+	.select-img {
+		width: 40px;
+		height: 40px;
+		border-radius: 20px;
+		float: right;
+		margin-left: 15px;
+	}
+
+	.select-text {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	li.select2-results__option {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 50px !important;
+	}
+
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ایجاد نماینده جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">نمایندگی بیمه</a></li>
+					<li class="breadcrumb-item active">لیست نمایندگی ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form class="form-horizontal content" action="/admin/agent/create?_csrf=<%= req.csrfToken() %>" method="post"
+			enctype="multipart/form-data">
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<!--? Select Avatar -->
+			<label style="margin: 10px 0px;">انتخاب آواتار</label>
+			<div class="form-group row avatar-select">
+				<!--? Profile Picker -->
+				<div class="col-sm-1">
+					<div class="small-12 medium-2 large-2 columns">
+						<div class="circle">
+							<img id="profile" class="profile-pic" src="/images/profile.png" />
+						</div>
+						<div class="p-image">
+							<i class="fa fa-camera upload-button"></i>
+							<i class="fa fa-remove remove-button"></i>
+							<input class="file-upload" type="file" accept="image/*" />
+						</div>
+					</div>
+				</div>
+				<!--! Profile Picker -->
+
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" name="avatar" class="radio-select" value="/images/avatar-01.png" checked />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-01.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" name="avatar" class="radio-select" value="/images/avatar-02.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-02.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-03.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-03.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-04.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-04.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-05.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-05.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-06.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-06.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-07.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-07.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-08.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-08.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-09.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-09.png" class="img-avatar" />
+					</label>
+				</div>
+				<div class="col-sm-1">
+					<label class="radio">
+						<input type="radio" class="radio-select" name="avatar" value="/images/avatar-10.png" />
+						<span class="radio-checkmark"></span>
+						<img src="/images/avatar-10.png" class="img-avatar" />
+					</label>
+				</div>
+			</div>
+			<!--! Select Avatar -->
+
+			<label>نوع نمایندگی *</label>
+			<select class="form-control formObject" name="type" id="type">
+				<option value="0">حقیقی</option>
+				<option value="1">حقوقی</option>
+			</select>
+
+			<div class="form-group">
+				<label>شرکت بیمه *</label>
+				<select class="form-control select" id="company">
+					<% companies.forEach(company => { %>
+					<option title="<%= company.logo[480] %>" value="<%= company._id %>">
+						<%= company.title %>
+					</option>
+					<% }) %>
+				</select>
+			</div>
+
+			<input name="coCode" type="text" class="form-control formObject" placeholder="کد نماینده در شرکت *"
+				value="<%= complete('coCode') %>" />
+
+			<input name="orgCode" type="text" class="form-control formObject" placeholder="کد نماینده در بیمه مرکزی *"
+				value="<%= complete('orgCode') %>" />
+
+			<input name="idCard" type="text" class="form-control formObject" placeholder="کد ملی"
+				value="<%= complete('idCard') %>" />
+
+			<div class="form-group">
+				<label>تاریخ شروع فعالیت</label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							<i class="fa fa-calendar"></i>
+						</span>
+					</div>
+					<input id="date" class="form-control" />
+				</div>
+			</div>
+
+			<input name="name" type="text" class="form-control formObject" placeholder="نام و نام خانوادگی *"
+				value="<%= complete('name') %>" />
+			<input name="email" type="text" class="form-control formObject" placeholder="ایمیل"
+				value="<%= complete('email') %>" />
+
+			<input name="mobile" type="text" class="form-control formObject" placeholder="شماره موبایل *"
+				value="<%= complete('mobile') %>" />
+
+			<input name="tell" type="text" class="form-control formObject" placeholder="تلفن ثابت"
+				value="<%= complete('tell') %>" />
+
+			<div class="form-group">
+				<label>استان *</label>
+				<select class="form-control select" id="state">
+					<% states.forEach(state => { %>
+					<option title="/images/Logo.png" value="<%= state._id %>">
+						<%= state.title %>
+					</option>
+					<% }) %>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label>شهر *</label>
+				<select class="form-control select" id="city"></select>
+			</div>
+
+			<input name="address" type="text" class="form-control formObject" placeholder="آدرس *"
+				value="<%= complete('address') %>" />
+
+			<button style="margin-top: 20px;" type="submit" class="btn btn-danger">
+				ثبت
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/logopicker.js"></script>
+<script src="/js/datepicker.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	const URL = '/admin/insurance/city/get?_csrf=<%= req.csrfToken() %>';
+
+	$(document).ready(function () {
+		let id = $('#state option:selected').val();
+		postData(URL, {
+			id
+		}).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+
+	$('#state').change(() => {
+		let id = $('#state option:selected').val();
+		$('#city option').remove();
+		postData(URL, {
+			id
+		}).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+
+	function formatState(state) {
+		if (!state.id) {
+			return state.text;
+		}
+		console.log(state.element.value.toLowerCase());
+		var $state = $(
+			'<span> <img src="' +
+			state.title +
+			'" class="select-img" /> ' +
+			'<p class="select-text">' +
+			state.text +
+			'</p>' +
+			'</span>'
+		);
+		return $state;
+	}
+
+	$('#company').select2({
+		templateResult: formatState,
+		width: 'resolve',
+	});
+
+</script>

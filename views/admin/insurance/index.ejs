@@ -1,0 +1,113 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست نمایندگی ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">نمایندگی بیمه</a></li>
+					<li class="breadcrumb-item active">لیست نمایندگی ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Header -->
+	<div class="card-header">
+		<h3 class="card-title">
+			لیست نمایندگی های بیمه
+			<a href="/admin/insurance/create" class="btn btn-sm btn-success card-btn">
+				<span>
+					<i class="fa fa-plus"></i>
+				</span>
+				نماینده جدید
+			</a>
+		</h3>
+	</div>
+	<!--! Card Header -->
+
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input
+					id="search"
+					type="text"
+					class="search-input"
+					placeholder="جستجو در جدول..."
+				/>
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+
+		<!--? Table -->
+		<table
+			id="table"
+			class="table table-bordered table-striped display responsive nowrap dt-center"
+		>
+			<thead>
+				<tr>
+					<th>جزئیات</th>
+					<th>وضعیت</th>
+					<th>نوع نمایندگی</th>
+					<th>عنوان نمایندگی</th>
+					<th>شرکت بیمه</th>
+					<th>کد نمایندگی</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<% agents.forEach(agent => { %>
+					<td>
+						<form
+							action="/admin/insurance/details/<%= agent._id %>?_method=PUT"
+							method="post"
+						>
+							<input
+								type="hidden"
+								name="_csrf"
+								value="<%= req.csrfToken() %>"
+							/>
+							<button type="submit" class="btn btn-primary">
+								مشاهده جزئیات
+							</button>
+						</form>
+					</td>
+					<% if(agent.condition) { %>
+					<td><button type="submit" class="btn btn-success">فعال</button></td>
+					<% } else { %>
+					<td><button type="submit" class="btn btn-danger">غیرفعال</button></td>
+					<% } %>
+					<td><%= agent.type == 0 ? 'حقیقی' : 'حقوقی' %></td>
+					<td><%= agent.title %></td>
+					<td><%= agent.insuranceCompany.title %></td>
+					<td><%= agent.coCode %></td>
+					<% }) %>
+				</tr>
+			</tbody>
+		</table>
+		<!--! Table -->
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [3, 'desc'], [{ orderable: false, targets: [0, 1] }]);
+</script>

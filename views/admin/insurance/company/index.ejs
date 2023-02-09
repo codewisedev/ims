@@ -1,0 +1,89 @@
+<% contentFor('style') %> <% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست شرکت های بیمه</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">نمایندگی بیمه</a></li>
+					<li class="breadcrumb-item active">لیست شرکت های بیمه</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">
+			لیست شرکت های بیمه
+			<a href="/admin/insurance/company/create" class="btn btn-sm btn-success card-btn">
+				<span>
+					<i class="fa fa-plus"></i>
+				</span>
+				شرکت جدید
+			</a>
+		</h3>
+	</div>
+
+	<div class="card-body">
+		<table id="example1" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>لوگو</th>
+					<th>عنوان</th>
+					<th>وضعیت</th>
+					<th>تنظیمات</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% companies.docs.forEach(company => { %>
+				<tr>
+					<td>
+						<img style="
+								width: 70px;
+								height: 70px;
+								border-radius: 70px;
+								border: 3px solid rgb(218, 218, 218);
+								padding: 2px;
+							" src="<%= company.logo[480] %>" />
+					</td>
+					<td><%= company.title %></td>
+					<td>
+						<% if(company.condition == true) { %>
+						<form action="/admin/company/condition/false/<%= company._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success">فعال</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/admin/company/condition/true/<%= company._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">غیر فعال</button>
+							</div>
+						</form>
+						<% } %>
+					</td>
+					<td>
+						<form action="/admin/company/<%= company._id %>?_method=DELETE" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<a href="/admin/insurance/company/edit/<%= company._id %>" class="btn btn-primary">
+									ویرایش
+								</a>
+								<button type="submit" class="btn btn-danger">حذف</button>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<% }); %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<% contentFor('script') %>

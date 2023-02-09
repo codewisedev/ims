@@ -1,0 +1,203 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/profilepicker.css" />
+<link rel="stylesheet" href="/css/radio.css" />
+<style>
+	.phone-type {
+		max-width: 20px;
+		z-index: 9999;
+	}
+
+	.phone-input {
+		display: flex;
+		align-items: center;
+	}
+
+	.dropdown-toggle {
+		margin: 10px 0px 0px 10px;
+	}
+
+	.dropdown-menu li {
+		text-align: center;
+		width: 100%;
+		height: 100%;
+	}
+
+	.btn-add-phone,
+	.btn-remove-phone {
+		margin: 10px 10px 0px 0px;
+	}
+
+	.form-object {
+		margin-top: 10px;
+		border-radius: 10px;
+		max-width: 300px;
+	}
+
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ویرایش شرکت بیمه</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">شرکت بیمه</a></li>
+					<li class="breadcrumb-item active">ویرایش شرکت بیمه</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form class="form-horizontal content"
+			action="/admin/insurance/company/edit/<%= company._id %>?_method=PUT&_csrf=<%= req.csrfToken() %>"
+			method="post" enctype="multipart/form-data">
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<!--? Logo Picker -->
+			<label>انتخاب لوگو نمایندگی بیمه</label>
+			<div class="col-xs-4">
+				<div class="small-12 medium-2 large-2 columns">
+					<div class="logo-circle">
+						<img id="logo" class="logo-pic" src="<%= company.logo[480] %>" />
+					</div>
+					<div class="l-image">
+						<i class="fa fa-camera upload-logo-button"></i>
+						<i class="fa fa-remove remove-logo-button"></i>
+						<input name="image" class="logo-upload" type="file" accept="image/*" hidden />
+					</div>
+				</div>
+			</div>
+			<!--! Logo Picker -->
+
+			<input name="title" type="text" class="form-control formObject" placeholder="* نام شرکت بیمه"
+				value="<%= company.title %>" />
+
+			<input name="site" type="text" class="form-control formObject" placeholder="سایت شرکت" dir="ltr"
+				value="<%= company.site %>" />
+
+			<input name="email" type="text" class="form-control formObject" placeholder="آدرس ایمیل" dir="ltr"
+				value="<%= company.email %>" />
+
+			<div class="form-group">
+				<div class="phone-list">
+					<label style="color: var(--middle-gray);">اطلاعات تماس: </label>
+					<button type="button" class="btn btn-success btn-add-phone">
+						<span class="fa fa-plus"></span>
+					</button>
+					<% let num = 0 %>
+					<% company.phone.forEach(phone => { %>
+					<div class="input-group phone-input">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="false">
+								<span class="type-text">
+									<% if(phone.type == 1) { %>
+									تلفن
+									<% } else if(phone.type == 2) { %>
+									فکس
+									<% } else { %>
+									موبایل
+									<% } %>
+								</span>
+								<span class="caret"></span>
+							</button>
+							<ul class="phone-type dropdown-menu" role="menu">
+								<li>
+									<a class="changeType" href="javascript:;" data-type-value="1">تلفن</a>
+								</li>
+								<div class="dropdown-divider"></div>
+								<li>
+									<a class="changeType" href="javascript:;" data-type-value="2">فکس</a>
+								</li>
+								<div class="dropdown-divider"></div>
+								<li>
+									<a class="changeType" href="javascript:;" data-type-value="3">موبایل</a>
+								</li>
+							</ul>
+						</span>
+						<input type="hidden" name="phone[<%= num %>][type]" class="type-input"
+							value="<%= phone.type %>" />
+						<input type="text" name="phone[<%= num %>][number]" class="form-control form-object" dir="ltr"
+							value="<%= phone.number %>" />
+						<input type="text" name="phone[<%= num %>][description]" class="form-control form-object"
+							placeholder="توضیحات" value="<%= phone.description %>" />
+						<button class="btn btn-danger btn-remove-phone" type="button">
+							<span class="fa fa-remove"></span>
+						</button>
+					</div>
+					<% num++ %>
+					<% }) %>
+				</div>
+			</div>
+
+			<button style="margin-top: 15px;" type="submit" class="btn btn-warning">
+				ویرایش
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/logopicker.js"></script>
+<script src="/js/datepicker.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	$(function () {
+		$(document.body).on('click', '.changeType', function () {
+			$(this).closest('.phone-input').find('.type-text').text($(this).text());
+			$(this)
+				.closest('.phone-input')
+				.find('.type-input')
+				.val($(this).data('type-value'));
+		});
+
+		$(document.body).on('click', '.btn-remove-phone', function () {
+			$(this).closest('.phone-input').remove();
+		});
+
+		$('.btn-add-phone').click(function () {
+			var index = $('.phone-input').length;
+			$('.phone-list').append(
+				'' +
+				'<div class="input-group phone-input">' +
+				'<span class="input-group-btn">' +
+				'<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="type-text">نوع</span> <span class="caret"></span></button>' +
+				'<ul class="dropdown-menu" style="z-index:9999" role="menu">' +
+				'<li><a class="changeType" href="javascript:;" data-type-value="1">تلفن</a></li> <div class="dropdown-divider"></div>' +
+				'<li><a class="changeType" href="javascript:;" data-type-value="2">فکس</a></li> <div class="dropdown-divider"></div>' +
+				'<li><a class="changeType" href="javascript:;" data-type-value="3">موبایل</a></li>' +
+				'</ul>' +
+				'</span>' +
+				'<input type="text" dir="ltr" name="phone[' +
+				index +
+				'][number]" class="form-control form-object" value="" />' +
+				'<input type="text" name="phone[' +
+				index +
+				'][description]" placeholder="توضیحات" class="form-control form-object" value="" />' +
+				'<input type="hidden" name="phone[' +
+				index +
+				'][type]" class="type-input" value="" />' +
+				'<span class="input-group-btn">' +
+				'<button class="btn btn-danger btn-remove-phone" type="button"><span class="fa fa-remove"></span></button>' +
+				'</span>' +
+				'</div>'
+			);
+		});
+	});
+
+</script>

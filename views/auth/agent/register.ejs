@@ -1,0 +1,341 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+<link rel="stylesheet" href="/css/profilepicker.css" />
+<link rel="stylesheet" href="/css/radio.css" />
+<link rel="stylesheet" href="/css/agent-auth.css" />
+
+<style>
+	.container {
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+</style>
+
+<% contentFor('body') %>
+<!--? Main Content -->
+<section class="container">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="alert alert-warning" role="alert">
+			پر کردن موارد ستاره دار الزامی است!
+			<i class="fas fa-info-circle" style="margin-left: 20px; font-size: 1.5rem;"></i>
+		</div>
+		<form class="form-horizontal content" action="/auth/agent/register?_csrf=<%= req.csrfToken() %>" method="POST"
+			enctype="multipart/form-data">
+
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<input name="mobile" type="text" value="<%= mobile %>" readonly hidden />
+
+			<input name="code" type="text" value="<%= code %>" readonly hidden />
+
+			<!--? Logo Picker -->
+			<div class="col-xs-4" style="margin: 0px 30px 0px 30px;">
+				<label>انتخاب لوگو نمایندگی بیمه</label>
+				<div class="small-12 medium-2 large-2 columns">
+					<div class="logo-circle">
+						<img id="logo" class="logo-pic" src="/images/profile.png" />
+					</div>
+					<div class="l-image">
+						<i class="fa fa-camera upload-logo-button"></i>
+						<i class="fa fa-remove remove-logo-button"></i>
+						<input name="image" class="logo-upload" type="file" accept="image/*" hidden />
+					</div>
+				</div>
+			</div>
+			<!--! Logo Picker -->
+
+			<!--? Select Avatar -->
+			<div class="content-group" style="margin: 0px 30px 0px 30px;">
+				<label>انتخاب آواتار کاربر مدیر</label>
+				<div class="row">
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-01.png"
+								<%= complete('avatar') == '/images/avatar-01.png' ? 'checked' : '' %> checked />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-01.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-02.png"
+								<%= complete('avatar') == '/images/avatar-02.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-02.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-03.png"
+								<%= complete('avatar') == '/images/avatar-03.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-03.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-04.png"
+								<%= complete('avatar') == '/images/avatar-04.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-04.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-05.png"
+								<%= complete('avatar') == '/images/avatar-05.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-05.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-06.png"
+								<%= complete('avatar') == '/images/avatar-06.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-06.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-07.png"
+								<%= complete('avatar') == '/images/avatar-07.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-07.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-08.png"
+								<%= complete('avatar') == '/images/avatar-08.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-08.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-09.png"
+								<%= complete('avatar') == '/images/avatar-09.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-09.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-10.png"
+								<%= complete('avatar') == '/images/avatar-10.png' ? 'checked' : '' %> />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-10.png" class="img-avatar" />
+						</label>
+					</div>
+				</div>
+			</div>
+			<!--! Select Avatar -->
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<input name="name" type="text" class="form-control formObject"
+						placeholder="* نام و نام خانوادگی مدیر" value="<%= complete('name') %>" />
+				</div>
+				<div class="col-md-6">
+					<input name="title" type="text" class="form-control formObject" placeholder="* عنوان نمایندگی بیمه"
+						value="<%= complete('title') %>" />
+				</div>
+			</div>
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<input name="coCode" type="text" class="form-control formObject" placeholder="کد نمایندگی بیمه *"
+						value="<%= complete('coCode') %>" style="direction: ltr; text-align: left;"
+						onkeypress='typeNumber(event)' />
+				</div>
+				<div class="col-md-6">
+					<input name="orgCode" type="text" class="form-control formObject"
+						placeholder="کد نماینده در بیمه مرکزی" value="<%= complete('orgCode') %>"
+						style="direction: ltr; text-align: left;" onkeypress='typeNumber(event)' />
+				</div>
+			</div>
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>شرکت بیمه</label>
+						<select class="form-control select" name="insuranceCompany">
+							<% insuranceCompanies.forEach(insuranceCompany => { %>
+							<option value="<%= insuranceCompany._id %>"
+								<%= complete('insuranceCompany') == insuranceCompany._id ? 'selected' : ''%>>
+								<%= insuranceCompany.title %>
+							</option>
+							<% }) %>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>تاریخ شروع فعالیت</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">
+									<i class="fa fa-calendar"></i>
+								</span>
+							</div>
+							<input id="date" name="startDate" class="form-control"
+								style="direction: ltr; text-align: left;" value="<%= complete('startDate') %>" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<input name="email" type="text" class="form-control formObject" placeholder="آدرس ایمیل"
+						value="<%= complete('email') %>" style="text-align: left; direction: ltr;" />
+				</div>
+				<div class="col-md-6">
+					<input name="tell" maxlength="11" type="text" style="text-align: left; direction: ltr;"
+						class="form-control formObject" placeholder="تلفن ثابت" value="<%= complete('tell') %>" />
+				</div>
+			</div>
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span style="cursor: pointer; border: 0;" class="input-group-text formObject">
+								<i toggle="#password" class="fa fa-fw fa-eye-slash field-icon toggle-password"></i>
+							</span>
+						</div>
+						<input id="password" style="text-align: left; direction: ltr;" name="password" type="password"
+							class="form-control formObject" placeholder="رمز عبور *"
+							value="<%= complete('password') %>" />
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span style="cursor: pointer; border: 0;" class="input-group-text formObject">
+								<i toggle="#repeatPassword"
+									class="fa fa-fw fa-eye-slash field-icon toggle-password"></i>
+							</span>
+						</div>
+						<input id="repeatPassword" style="text-align: left; direction: ltr ;" name="repeatPassword"
+							type="password" class="form-control formObject" placeholder="تکرار رمز عبور *"
+							value="<%= complete('repeatPassword') %>" />
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>استان</label>
+						<select class="form-control select" id="state" name="state">
+							<% states.forEach(state => { %>
+							<option value="<%= state._id %>" <%= complete('state') == state._id ? 'selected' : ''%>>
+								<%= state.title %>
+							</option>
+							<% }) %>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label>شهر</label>
+						<select class="form-control select" id="city" name="city"></select>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<input name="address" type="text" class="form-control formObject" placeholder="* آدرس"
+						value="<%= complete('address') %>" />
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-danger formObject" style="width: 100px; margin-right: 30px;">
+				ثبت
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+<!--! Main Content -->
+
+<% contentFor('script') %>
+<script src="/plugins/jquery/dist/jquery.min.js"></script>
+<script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/logopicker.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	const CITY_URL = '/auth/agent/city?_csrf=<%= req.csrfToken() %>';
+
+	$(document).ready(async function () {
+		let stateId = $('#state option:selected').val();
+		await postData(CITY_URL, {
+			id: stateId
+		}).then((data) => {
+			data.map((city) => {
+				if ("<%= complete('city') %>" == city._id)
+					$('#city').append(
+						`<option value="${city._id}" selected>${city.title}</option>`);
+				else
+					$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+
+		$('#date').pDatepicker({
+			observer: true,
+			initialValue: false,
+			format: 'YYYY/MM/DD',
+			altField: '#alt-date',
+			autoClose: true,
+			maxDate: new persianDate().add('year', 0).valueOf(),
+			minDate: new persianDate().subtract('year', 100).valueOf(),
+		});
+	});
+
+	$('#state').change(async () => {
+		let stateId = $('#state option:selected').val();
+		$('#city option').remove();
+		await postData(CITY_URL, {
+			id: stateId
+		}).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+
+	$('.toggle-password').click(function () {
+		$(this).toggleClass('fa-eye fa-eye-slash');
+		var input = $($(this).attr('toggle'));
+		if (input.attr('type') == 'password') {
+			input.attr('type', 'text');
+		} else {
+			input.attr('type', 'password');
+		}
+	});
+
+	function typeNumber(evt) {
+		var theEvent = evt || window.event;
+		if (theEvent.type === 'paste')
+			key = event.clipboardData.getData('text/plain');
+		else {
+			var key = theEvent.keyCode || theEvent.which;
+			key = String.fromCharCode(key);
+		}
+		var regex = /[0-9]|\./;
+		if (!regex.test(key)) {
+			theEvent.returnValue = false;
+			if (theEvent.preventDefault) theEvent.preventDefault();
+		}
+	}
+
+</script>

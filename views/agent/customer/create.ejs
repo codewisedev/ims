@@ -1,0 +1,262 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ثبت مشتری جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">نمایندگی بیمه</a></li>
+					<li class="breadcrumb-item active">ثبت مشتری جدید</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form class="form-horizontal content" action="/agent/customer/create?_csrf=<%= req.csrfToken() %>"
+			method="post">
+
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">اطلاعات اولیه</h3>
+				</div>
+
+				<div class="card-body p-0">
+					<div class="col-md-12 p-3">
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<input name="name" type="text" class="form-control formObject"
+									placeholder="* نام و نام خانوادگی" value="<%= complete('name') %>" />
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<div class="row">
+									<div class="col-md-6">
+										<label style="height: 100%; display: flex; align-items: center;">
+											* جنسیت
+										</label>
+									</div>
+									<div class="col-md-6">
+										<div class="row">
+											<button type="button" class="btn_choose_sent bg_btn_chose_1">
+												<input type="radio" name="gender" value="1" checked /> مرد
+											</button>
+											<button type="button" class="btn_choose_sent bg_btn_chose_2">
+												<input type="radio" name="gender" value="2" /> زن
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label>* شماره تماس</label>
+								<div class="input-group">
+									<input type="text" id="mobile" name="mobile" class="form-control"
+										data-inputmask='"mask": "0999 99 99 999"' data-mask dir="ltr" />
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="fa fa-phone"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<label>* نوع بیمه پیشنهادی</label>
+								<select class="form-control formObject select" id="proposal" name="proposal">
+									<option value="0">نامشخص</option>
+									<option value="1">بیمه عمر</option>
+									<option value="2">بیمه شخص ثالث</option>
+									<option value="3">بیمه بدنه</option>
+									<option value="4">بیمه آتش سوزی</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card collapsed-card mt-4">
+				<div class="card-header">
+					<h3 class="card-title">اطلاعات تکمیلی</h3>
+					<div class="card-tools" style="position: absolute; left: 15px;">
+						<button data-widget="collapse" class="btn btn-tool" style="position: absolute; left: 0;">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="card-body p-0">
+					<div class="col-md-12 p-3">
+						<div class="row">
+							<div class="col-md-4 mb-3">
+								<label>تاریخ تولد</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</span>
+									</div>
+									<input id="date" class="form-control" />
+									<input type="hidden" id="alt-date" name="birth" />
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="row">
+									<div class="col-md-9">
+										<div class="form-group">
+											<label>وضعیت تاهل</label>
+											<div class="row">
+												<button type="button" class="btn_choose_sent bg_btn_chose_3">
+													<input type="radio" name="marital" value="1"
+														onclick="martialCheck()" /> مجرد
+												</button>
+												<button type="button" class="btn_choose_sent bg_btn_chose_4">
+													<input type="radio" id="martial" name="marital" value="2"
+														onclick="martialCheck()" /> متاهل
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<input id="child" name="child" type="text" class="form-control formObject"
+									style="text-align: left; direction: ltr;" placeholder="تعداد فرزندان" maxlength="2"
+									value="<%= complete('child') %>" onkeypress='typeNumber(event)' readonly />
+							</div>
+
+							<div class="col-md-4">
+								<input name="idNumber" type="text" class="form-control formObject"
+									style="text-align: left; direction: ltr;" placeholder="شماره ملی"
+									value="<%= complete('idNumber') %>" onkeypress='typeNumber(event)' />
+							</div>
+
+							<div class="col-md-4">
+								<input name="job" type="text" class="form-control formObject" placeholder="شغل"
+									value="<%= complete('job') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="disease" type="text" class="form-control formObject"
+									placeholder="سابقه بیماری" value="<%= complete('disease') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="introductionMethod" type="text" class="form-control formObject"
+									placeholder="نحوه آشنایی" value="<%= complete('introductionMethod') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="address" type="text" class="form-control formObject" placeholder="آدرس"
+									value="<%= complete('address') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="desc" type="text" class="form-control formObject" placeholder="توضیحات"
+									value="<%= complete('desc') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="history" type="text" class="form-control formObject"
+									placeholder="سابقه بیمه" value="<%= complete('history') %>" />
+							</div>
+
+							<div class="col-md-4">
+								<input name="healthCondition" type="text" class="form-control formObject"
+									placeholder="وضعیت سلامتی" value="<%= complete('healthCondition') %>" />
+							</div>
+
+							<div class="col-md-12">
+								<label>علاقه مندی ها</label>
+								<select style="text-align: right; direction: rtl; width: 100%;"
+									class="form-control formObject tag" multiple="multiple" name="intrest">
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-danger mt-5">
+				ثبت
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+<script>
+	$('[data-mask]').inputmask();
+
+	$(document).ready(function () {
+		$('#date').pDatepicker({
+			observer: true,
+			initialValue: false,
+			format: 'YYYY/MM/DD',
+			altField: '#alt-date',
+			autoClose: true,
+			maxDate: new persianDate().add('year', 0).valueOf(),
+			minDate: new persianDate().subtract('year', 150).valueOf(),
+		});
+	});
+
+	function martialCheck() {
+		var radio = document.getElementById("martial");
+		var div = document.getElementById("child");
+		if (radio.checked == true)
+			div.readOnly = false;
+		else {
+			div.readOnly = true;
+			div.value = '';
+		}
+	}
+
+	function typeNumber(evt) {
+		var theEvent = evt || window.event;
+		if (theEvent.type === 'paste')
+			key = event.clipboardData.getData('text/plain');
+		else {
+			var key = theEvent.keyCode || theEvent.which;
+			key = String.fromCharCode(key);
+		}
+		var regex = /[0-9]|\./;
+		if (!regex.test(key)) {
+			theEvent.returnValue = false;
+			if (theEvent.preventDefault) theEvent.preventDefault();
+		}
+	}
+
+	$('.tag').select2({
+		tags: true,
+		dir: "rtl",
+		"language": {
+			"noResults": function () {
+				return "موردی یافت نشد";
+			}
+		},
+	});
+
+</script>

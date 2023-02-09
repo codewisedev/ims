@@ -1,0 +1,147 @@
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست بلاگ ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">بلاگ</a></li>
+					<li class="breadcrumb-item active">لیست بلاگ ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="chat-header">
+			<div class="mt-1 media">
+				<img
+					src="<%= message.user.avatar %>"
+					alt="User Avatar"
+					class="img-size-50 ml-3 img-circle"
+				/>
+				<div class="media-body">
+					<h3 class="dropdown-item-title">
+						<%= message.user.name %>
+					</h3>
+					<p class="mt-2 text-sm"><%= message.title %></p>
+					<p class="mt-1 mb-1 text-sm text-muted">
+						<i class="fa fa-clock"></i>
+						<%= date(message.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+					</p>
+				</div>
+			</div>
+			<div>
+				<% if(message.images) message.images.forEach(image => { %>
+				<img src="<%= image %>" alt="User Avatar" class="img-size-50" />
+				<% }) %>
+			</div>
+		</div>
+
+		<div class="dropdown-divider"></div>
+		<div class="chat-body">
+			<ul id="chat">
+				<div class="row">
+					<li class="me col-md-12">
+						<div class="info">
+							<span class="status green"></span>
+							<h2><%= message.user.name %></h2>
+							<h3>
+								<%= date(message.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss')
+								%>
+							</h3>
+						</div>
+						<div class="triangle"></div>
+						<div class="message">
+							<p><%= htmlToText(message.message) %></p>
+						</div>
+					</li>
+				</div>
+
+				<% if(message.response.length > 0) message.response.forEach(res => { %>
+				<div class="row">
+					<li
+						class="<%= req.user._id.equals(res.user._id) ? 'me' : 'you' %> col-md-12"
+					>
+						<div class="info">
+							<span class="status green"></span>
+							<h2><%= res.user.name %></h2>
+							<h3>
+								<%= date(res.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+							</h3>
+						</div>
+						<div class="triangle"></div>
+						<div class="message">
+							<p><%= htmlToText(res.message) %></p>
+						</div>
+					</li>
+				</div>
+				<% }) %>
+			</ul>
+		</div>
+		<div class="dropdown-divider"></div>
+
+		<form class="form-horizontal content" action="#">
+			<div class="row chat-footer">
+				<textarea
+					id="editor"
+					name="response"
+					class="chat-textbox"
+					autofocus
+				></textarea>
+				<button style="height: 100px;" id="submit" class="btn btn-danger">
+					<i class="fa fa-paper-plane" aria-hidden="true"></i>
+				</button>
+			</div>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/fetch.js"></script>
+
+<script>
+	let chat = document.getElementById('chat-body');
+	chat.scrollTop = chat.scrollHeight;
+
+	$('#editor').keydown((e) => {
+		if ($.trim($('#editor').val()).length < 1)
+			$('#submit').prop('disabled', true);
+		else $('#submit').prop('disabled', false);
+	});
+
+	const URL = '/support/ticket/<%= message._id %>?_csrf=<%= req.csrfToken() %>';
+	$('#submit').click(async (e) => {
+		e.preventDefault();
+		let response = $('#editor').val();
+		await postData(URL, { response }).then((data) => {
+			$('#chat').append(`
+				<div class="row">
+					<li class="me col-md-12">
+						<div class="info">
+							<span class="status green"></span>
+							<h2><%= user.name %></h2>
+							<h3>
+								<%= date(new Date()).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+							</h3>
+						</div>
+						<div class="triangle"></div>
+						<div class="message">
+							<p><%= htmlToText('${data.message}') %></p>
+						</div>
+					</li>
+				</div>
+			`);
+		});
+		chat.scrollTop = chat.scrollHeight;
+		$('#submit').prop('disabled', true);
+		$('#editor').val('');
+		$('#editor').focus();
+	});
+</script>
